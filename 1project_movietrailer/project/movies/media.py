@@ -1,3 +1,7 @@
+# Author: Jovani Kimble  Project: Movie Trailer Website
+
+# This file defines class movie
+
 import webbrowser
 
 class Movie():

@@ -1,3 +1,8 @@
+# Author: Jovani Kimble   Project: Movie Trailer Website
+
+# This file includes many instances of object movie
+
+# Imports files needed from within directory
 import fresh_tomatoes
 import media
 
@@ -31,11 +36,8 @@ jones = media.Movie("Bridjet Jones's Diary",
                     "http://www.impawards.com/2001/posters/bridget_joness_diary_ver1.jpg",
                     "https://www.youtube.com/watch?v=PYPK3jPZkYI")
 
+# Creates list of favorite movies
 movies = [amelie, holiday, gatsby, love, vita, jones]
-#fresh_tomatoes.open_movies_page(movies)
-#print(media.Movie.VALID_RATINGS)
-print(media.Movie.__doc__)
-print(media.Movie.__name__)
-print(media.Movie.__module__)
+
 
 
