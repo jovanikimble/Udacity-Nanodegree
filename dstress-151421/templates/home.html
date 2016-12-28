@@ -1,0 +1,22 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+    This is {{name}} {{last}}'s home page
+    {% for i in range(n) %}
+      She is a cutie {{i}}
+    {% endfor %}
+
+    <div>
+      <span>She likes </span>
+      {% for food in foods %}
+        <span>{{food}} food</span>
+      {% endfor %}
+
+    </div>
+
+    {% if state == 'tired' %}
+      <div>She wants to go to sleep</div>
+    {% else %}
+      <div>She is ready to start the day</div>
+    {% endif %}
+{% endblock %}
