@@ -28,10 +28,20 @@ Using third party code
 
 Make sure you have **python downloaded and installed.**
 
-If not, download[here](https://www.python.org/downloads/)
+If not, download [here](https://www.python.org/downloads/)
 
-Next, clone repository
+Next, clone the following repository:
 
-$ b
+[HERE](https://github.com/jovanikimble/Udacity-Nanodegree.git)
+
+`cd` to this directory:
+
+$ Udacity-Nanodegree/1project_movietrailer/project/movies/
+
+Run this line of code in terminal:
+
+$ python entertainment_center.py
+
+
 
 
