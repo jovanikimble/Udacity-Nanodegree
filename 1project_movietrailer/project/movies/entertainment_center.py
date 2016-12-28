@@ -38,6 +38,9 @@ jones = media.Movie("Bridjet Jones's Diary",
 
 # Creates list of favorite movies
 movies = [amelie, holiday, gatsby, love, vita, jones]
+# Uses instances of movies to generate html page and then
+# opens page in the browswer
+fresh_tomatoes.open_movies_page(movies)
 
 
 
