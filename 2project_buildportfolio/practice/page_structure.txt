@@ -1,0 +1,135 @@
+Page Structure
+
+  -Tree like structure
+  -Consisting of open and close tage <> & </>
+
+HTML DOC STRUCTURE(How Html classifies elements)
+
+  <html>
+  <head>
+  <title>Page Title</title>
+  </head>
+  <body>
+
+  <h1>H1 heading (Largest Header) </h1>
+  <p>Paragraph.</p>
+
+  </body>
+  </html>
+
+  HTML --> language of web, has specific syntax and rules
+    word = tag
+
+Vocabulary
+
+HTML-CSS-DOM
+HTML - HyperText Markup Language - the standard markup language used to create web pages.
+
+CSS - Cascading Style Sheets - style sheet language used for describing the look and formatting of a document written in a markup language.
+
+DOM - Document Object Model - a cross-platform and language-independent convention for representing and interacting with objects in HTML (and other markup languages). The nodes of every document are organized in a tree structure, called the DOM tree.
+
+CSS example:
+
+All h1 tags with the class article will have dark blue text.
+
+
+BOXES:
+
+- Boxes make up web pages, everything is a box, or rectangle.
+- Even circles are within a box
+- Everything on a web page is a box!
+- Think of web pages as many boxes!
+
+Class Attributes:
+
+- Can think of them as labels on boxes
+- example <div class="title">
+
+Styling up:
+
+- You can style elements by html tags or classes, example"
+
+- p {
+  color:tag style;
+} or
+
+- .description {
+  color:class style;
+}
+
+CSS documentation = https://developer.mozilla.org/en-US/docs/Web/CSS/Reference
+
+The Box Model:
+
+- margin {no background color, space between boxes, transparent}
+- border {surrounds paddings affected by color property}
+- padding {padding protects content affected by background color}
+- content {@ the very center,nucleus, image or text that appears on website}
+
+Percentages or pixels:
+
+- percentages are dynamis pixels are not
+
+Code, Text, Refine(Divide and Conquor):
+
+- Structure
+- Boxify
+- Tags
+- Size of boxes
+- Positioning of boxes
+- Layout complete, move on to smaller details
+
+Steps:
+- Look for natural boxes
+- Look for repeated styles and semantic elements
+- Write your HTML
+- Apply styles(From BIGGEST to smallest)
+- Fix things
+
+Grid Based Design:
+
+- Frameworks - Collection of CSS classes that make page layout easy to implement.
+
+- Responsive Web Pages: Website not fixed for a certain size.
+  - adaptive design.
+  - percentages work best for responsive design.
+  - 12 columns allow for good customization.
+
+  Negative Space:
+
+  - Space that doesn't contain anything.
+
+  Overflow:
+
+  - Allowing text to scroll.
+
+  Media Queries:
+
+  - Change CSS properties depending on device, screen size and properties.
+
+  Minified Files:
+
+  - Take up less space and can be downloaded faster
+
+  - Whitespace taken out of minified files.
+
+  Organizing CSS sheets:
+
+  - General resets first (ex. body)
+  - Then general classes (ex. center)
+  - Then more specific classes (ex.logo)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
