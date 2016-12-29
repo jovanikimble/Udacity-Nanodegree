@@ -36,3 +36,11 @@ h2 {
   width: 1080px;
   height: 370px;
 }
+.footer-margin {
+  margin-bottom: 15px;
+}
+.footer-style {
+  text-align: center;
+  font-size: 10px;
+  margin-top: 20px;
+}
