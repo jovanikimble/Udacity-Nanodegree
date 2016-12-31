@@ -3,42 +3,49 @@ body {
   color: #2d3c49;
   font-weight: 400;
 }
+
 hr {
-  border: 2px solid;
+  border: 1.7px solid;
+  background-color: #7d97ad;
   color: #7d97ad;
 }
+
 h3 {
   font-weight: 400;
   font-size: 30px;
 }
+
 h2 {
   padding: 35px;
   color: #abb7cc;
   font-size: 35px;
 }
+
 .text-thin {
   font-weight: 100;
 }
+
 .text-super {
   font-size: 65px;
 }
+
 .text-bold {
   font-weight: 700;
 }
+
 .logo {
   padding-top: 15px;
 }
+
 .img-size {
   width: 215px;
   height: 175px;
 }
-.img-main {
-  width: 1080px;
-  height: 370px;
-}
+
 .footer-margin {
   margin-bottom: 15px;
 }
+
 .footer-style {
   text-align: center;
   font-size: 10px;
