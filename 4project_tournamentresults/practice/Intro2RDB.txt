@@ -1,0 +1,86 @@
+Introduction to Relational Databases:
+- Learn SQL
+- Write Python Code
+- Organize and store applications data in a database
+- Use database as a tool to answer new questions
+
+Lessons:
+ -1) Relational Concepts
+ -2) SQL Queries
+ -3) Python DB-API
+ -4) More SQL
+ -5) Final Project
+
+ What is a database?
+
+ - It is a data structure like a list, that stores key-value pairs
+ - Navgational DB
+ - Relational DB
+ - Key value store.
+
+ Relational Databases?
+
+ - Offers ability to compare and query and summarize data.
+ - Offers ability to set constraints
+ - Data stored in tables
+ - Counting is an aggregation(operation that summarizes data from multiple rows into a single row)
+
+ Common Aggregations in SQL:
+
+ - count(takes values of any type and returns a number)
+ - avg
+ - max
+ - min
+ - sum
+
+ How Queries Happen:
+
+ - Sends Query
+ - Data Responds with result in a new table
+ - Could happen over network or on local disk
+
+ Related Tables:
+
+ - Queries that are connected are called joins
+ - We can derive new tables from linking up existing tables using joins
+
+ Uniqueness and Keys:
+
+ - Unique id needs to be related to each thing
+ - Primary Key - A column that uniquely identifies the rows in a table
+
+ Joining Tables:
+
+ - Example: select animals.name, animals.species, diet.food from
+ animals join diet on animals.species = diet.species;
+
+ Elements of SQL:
+
+ - Select where statements
+
+ Data Types supported by SQL:
+
+ [Text and String Types]
+ - text(any length), {char(n) - exactly n characters},
+  {varchar(n) exactly n characters}
+
+ [Numeric Types]
+ - integer, real(decimal, acurate up to 6 decimal places),
+   double precision(decimal, accurate up to 15 decimal places)
+   decimal(an exact decimal value)
+
+  [Date and Time Types]
+ - date(calendar date, includes year, month, and date)
+ - time(time of day)
+ - timestamp(date and time together)
+
+ Query Makeup:
+
+ - keyword + columns + keyword + tables + where/row restriction
+ - supports boolean values(and && or)
+
+
+
+
+
+

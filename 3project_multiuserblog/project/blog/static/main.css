@@ -1,0 +1,145 @@
+
+.login-area {
+    font-size: 26px;
+    color: gray;
+    text-align: center;
+    margin-top: 8px;
+    right: 10px;
+}
+
+.login-link {
+    color: gray;
+    text-decoration: none;
+}
+
+.login-link:visited {
+    color: gray;
+}
+
+.login-link:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+}
+
+label + label {
+    margin-top: 20px;
+}
+
+input[type=text] {
+    width: 500px;
+    font-size: 20px;
+    padding: 2px;
+    font-family: "Courier New", Courier, monospace;
+}
+
+input[name=username] {
+    width: 200px;
+    font-size: 15px;
+    padding: 2px;
+    font-family: "Courier New", Courier, monospace;
+    margin-top: 50px;
+}
+
+input[name=password] {
+    width: 200px;
+    font-size: 15px;
+    padding: 2px;
+    font-family: "Courier New", Courier, monospace;
+    margin-top: 50px;
+}
+
+textarea {
+  width: 500px;
+  height: 400px;
+  font-size: 17px;
+  font-family: "Courier New", Courier, monospace;
+}
+
+input[type=submit] {
+  display: inline-block;
+  float: left;
+  font-size: 23px;
+  font-weight: 700;
+  font-family: "Courier New", Courier, monospace;
+  background-color: #355384;
+  color: #ffffff;
+  border-color: #ffffff;
+  margin-top: 10px;
+}
+input[name=login] {
+  display: inline-block;
+  float: left;
+  font-size: 23px;
+  font-weight: 700;
+  font-family: "Courier New", Courier, monospace;
+  background-color: #355384;
+  color: #ffffff;
+  border-color: #ffffff;
+  margin-top: 10px;
+  margin-left: 100px;
+}
+.main-title {
+    display: block;
+    color: #4286f4;
+    font-size: 80px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+    text-decoration: none;
+}
+
+.post + .post {
+    margin-top: 15px;
+}
+
+.post-heading {
+    position: relative;
+    border-bottom: 3px solid #666;
+}
+
+.post-title {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.post-date {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    color: #999;
+
+}
+
+.post-content {
+    margin-top: 5px;
+}
+
+.new-post {
+  color: #dce2e2;
+}
+.newpost-post {
+  font-family: "Courier New", Courier, monospace;
+  font-size: 16px;
+}
+.fields {
+  margin-top: 30px;
+  margin-left: 10px;
+  color: #a3c3c6;
+  width: 200px;
+}
+

@@ -1,0 +1,75 @@
+Loading Templates:
+- first lines where we have template dir...
+- Example :
+    [template_dir = os.path.join(os.path.dirname(__file__), 'templates')
+    jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir),
+    autoescape = True)]
+
+Write:
+- small function that streamlines, so that we don't continuosly write out
+  self.response.out.write
+
+Render_Str:
+- takes template name and dictionary of parameters
+
+Render:
+- calls write and render_str to print out the template
+
+Datastore:
+- for organizing purposes, things stored in data store need a parent.
+
+Defining the post class:
+  class Post(db.Model).
+
+  - Strings can be indexed and texts can not.
+
+Forms and Inputs:
+
+- <input> can go into forms
+- <input> tag can take in few attributes, one of which is name.
+  ex. <input name="q">
+- <input type="submit"> displays a submit button
+- action attribute, allows us to direct where the form submits to, so now when we hit submit it sends the data there.
+
+Status Codes:
+
+- 405 = Method not allowed
+- Starts with 4 = Error's on our side or browser side
+
+GETS:
+- includes parameters in the URL
+- get requests = used for fetching documents
+- get parameters = used to describe which document we are looking for
+- describing WHAT we are getting
+- affected by the maximum URL length
+- OK to cache
+- shouldn't change the server
+- should be able to make same request without changing the server
+- GET REQUESt = simple request for fetching a document
+- GET PARAMETERS = used to describe what doc or page we are looking for
+
+POSTS:
+- includes the parameters/data in the request body
+- updating data
+- making changes to the server
+- no max length, servers can be configured to have a max
+- never cached, not OK to cache
+- ok to change the server
+- POST PARAMETERS = make updates to the server
+- POST REQUESTS = destructive in nature?
+
+VAIDATION:
+
+- verifying on the server side that what we recieved is what
+we expect to recieve.
+- Your server can recieve junk
+- Need to make sure we validate our parameters.
+- Create functions for validation checks
+- Validation basic structure:
+  - 1) Verify the user's input
+  - 2) on error, render form again
+  - 3) include error message
+
+
+
+

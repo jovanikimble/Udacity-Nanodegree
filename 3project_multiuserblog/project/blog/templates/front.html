@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="row-fluid">
+      <div class="col-md-12">
+        <a class="newpost-post text-center" href="/blog/newpost">Create a new post!</a>
+        {% for p in posts %}
+          {{ p.render() | safe }}
+          <br><br>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
