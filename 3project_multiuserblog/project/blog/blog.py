@@ -125,6 +125,7 @@ class Post(db.Model):
 
     def render(self):
         self._render_text = self.content.replace('\n', '<br>')
+        self._id = str(self.key().id())
         return render_str("post.html", p = self)
 
 class BlogFront(BlogHandler):
@@ -252,6 +253,61 @@ class Login(BlogHandler):
             msg = 'Invalid login'
             self.render('login-form.html', error = msg)
 
+class EditPost(BlogHandler):
+    def get(self, post_id):
+        if not self.user:
+            self.redirect('/login')
+            return
+
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        if not post:
+            self.error(404)
+            return
+
+        self.render("newpost.html", subject = post.subject, content = post.content)
+
+    def post(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        subject = self.request.get('subject')
+        content = self.request.get('content')
+
+        if subject and content:
+            post.subject = subject
+            post.content = content
+            post.put()
+            self.redirect('/blog/%s' % str(post.key().id()))
+        else:
+            error = "subject and content, please!"
+            self.render("newpost.html", subject=subject, content=content, error=error)
+
+class DeletePost(BlogHandler):
+    def get(self, post_id):
+        if not self.user:
+            self.redirect('/login')
+            return
+
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+        self.render("delete-post.html", subject=post.subject)
+
+    def post(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        q = self.request.get('q')
+
+        if q == 'y':
+            post.delete()
+            self.redirect('/')
+        else:
+            self.redirect('/')
+
+
+
 class Logout(BlogHandler):
     def get(self):
         self.logout()
@@ -270,6 +326,8 @@ app = webapp2.WSGIApplication([('/', BlogFront),
                                ('/signup', Register),
                                ('/login', Login),
                                ('/logout', Logout),
-                               ('/dropall', DropAll)
+                               ('/dropall', DropAll),
+                               ('/edit/([0-9]+)', EditPost),
+                               ('/delete/([0-9]+)', DeletePost)
                                ],
                               debug=True)

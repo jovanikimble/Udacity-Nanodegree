@@ -1,0 +1,3 @@
+Cookies, login, logout, user sessions,
+
+Browser = container.

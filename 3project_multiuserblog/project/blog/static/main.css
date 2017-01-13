@@ -71,7 +71,6 @@ textarea {
 
 input[type=submit] {
   display: inline-block;
-  float: left;
   font-size: 23px;
   font-weight: 700;
   font-family: "Courier New", Courier, monospace;

@@ -5,6 +5,7 @@
     <div class="row-fluid">
       <div class="col-md-12">
         <a class="newpost-post text-center" href="/blog/newpost">Create a new post!</a>
+        {{message}}
         {% for p in posts %}
           {{ p.render() | safe }}
           <br><br>

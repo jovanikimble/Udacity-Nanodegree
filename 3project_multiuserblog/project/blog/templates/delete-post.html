@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div class="container">
+    <div class="row-fluid">
+      <div class="col-md-12 text-center">
+        <h2>Are you sure you want to delete "{{subject}}"?</h2>
+        <form method="post">
+          <div>
+            <select name="q">
+              <option value="y">Yes</option>
+              <option value="n">No</option>
+            </select>
+          </div>
+          <div class="text-center">
+            <input type="submit">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

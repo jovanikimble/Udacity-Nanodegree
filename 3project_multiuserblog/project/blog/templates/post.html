@@ -1,7 +1,9 @@
 <div class="post">
   <div class="post-heading">
     <div class="post-title">
-      {{p.subject}}
+      <a href="/blog/{{p._id}}">{{p.subject}}</a>
+      <a href="/edit/{{p._id}}"><i class="material-icons">mode_edit</i></a>
+      <a href="/delete/{{p._id}}"><i class="material-icons">delete</i></a>
     </div>
 
     <div class="post-date">
