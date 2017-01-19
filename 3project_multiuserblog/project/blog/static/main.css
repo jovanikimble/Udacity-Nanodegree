@@ -102,6 +102,19 @@ input[name=login] {
     text-decoration: none;
 }
 
+.small-icon {
+  font-size: 12px !important;
+}
+
+.comment-section {
+  color: #337ab7;
+}
+
+.comment-area {
+  width: 100%;
+  height: 4em;
+}
+
 .post + .post {
     margin-top: 15px;
 }

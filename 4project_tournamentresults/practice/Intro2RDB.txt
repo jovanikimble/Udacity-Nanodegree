@@ -102,8 +102,46 @@ Lessons:
   - string colums sorted in alphabetical order
   - with desc, order is reversed
 
- - group by colums, changes the behaviors of aggregations such as max, count, and sum. With group by, the aggregation will return one row for each distint value in columns
+ - group by columns, changes the behaviors of aggregations such as max, count, and sum. With group by, the aggregation will return one row for each distint value in columns
 
+Creating Databases:
+
+- create database name[options];
+- drop database name[options];
+- drop table name[options]
+- connect w \c
+
+Declaring Relationships:
+
+- Putting restrictions on coulumn data types.
+- SKU = stock keeping unit
+- For example we can tell the database that a particular column can only have values that refer to a key in another table using the REFERENCES key word. Example:
+  create table sales (
+    sku text references products (sku),
+    sale_date date,
+    count integer);
+- References provide referential integrity -- colums that are supposed to
+refer to each other are guaranteed to do so.
+
+Foreign Keys:
+  - colums with areferences constraint is also called a foreign key.
+  - foreign keys uniquely identify rows
+
+Self Joins:
+
+  - Joining a table to itself.
+
+Subqueries & Subselect.
+
+  - remember the results if a query returns a table, so you can select from it and join it as you would other tables
+
+Views: A view is a select query stored in the database in a way that lets you use it like a table
+  syntax: create view viewname as select...
+          ecample: create view course_size as num from enrollment
+                    select course_id, count (*) as num
+                    from enrollment
+                    group by course_id;
+  views are usefull for aggregations
 
 
 

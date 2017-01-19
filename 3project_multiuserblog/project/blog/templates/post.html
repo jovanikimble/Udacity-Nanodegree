@@ -4,6 +4,15 @@
       <a href="/blog/{{p._id}}">{{p.subject}}</a>
       <a href="/edit/{{p._id}}"><i class="material-icons">mode_edit</i></a>
       <a href="/delete/{{p._id}}"><i class="material-icons">delete</i></a>
+      {% if p.show_like %}
+      <a href="/liked/{{p._id}}"><i class="material-icons">
+        {% if p.is_liked %}
+          favorite
+        {% else %}
+          favorite_border
+        {% endif %}
+        </i></a>
+      {% endif %}
     </div>
 
     <div class="post-date">
@@ -14,4 +23,29 @@
   <div class="post-content">
     {{p._render_text | safe}}
   </div>
+  {% if p.is_permalink %}
+  <div class="comment-section">
+    <h3>COMMENTS</h3>
+
+    {% for comment in p.comments %}
+      <div>
+        <div><span>Comment by: {{comment.owner}}</span></div>
+        <div><span style="color: black;">{{comment.content}}</span>
+          {%if p.owner == comment.owner%}
+              <a href="/edit_comment/{{comment.key().id()}}"><i class="material-icons small-icon">mode_edit</i></a>
+              <a href="/delete_comment/{{comment.key().id()}}"><i class="material-icons small-icon">delete</i></a>
+          {% endif %}
+        </div>
+        <br/>
+      </div>
+    {% endfor %}
+
+    <form method="post">
+      <textarea class="comment-area" name="comment">
+        {{comment}}
+      </textarea>
+      <input type="submit" value="Submit Comment"/>
+    </form>
+  </div>
+  {% endif %}
 </div>

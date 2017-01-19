@@ -10,6 +10,11 @@
           {{ p.render() | safe }}
           <br><br>
         {% endfor %}
+        <h3>Other Posts</h3>
+        {% for p in other_posts %}
+          {{ p.render() | safe }}
+          <br><br>
+        {% endfor %}
       </div>
     </div>
   </div>

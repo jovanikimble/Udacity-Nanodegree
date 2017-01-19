@@ -128,18 +128,35 @@ class Post(db.Model):
         self._id = str(self.key().id())
         return render_str("post.html", p = self)
 
+class Comment(db.Model):
+    post_id = db.StringProperty(required = True)
+    owner = db.StringProperty(required = True)
+    content = db.TextProperty(required = True)
+    created = db.DateTimeProperty(auto_now_add = True)
+    last_modified = db.DateTimeProperty(auto_now = True)
+
+class Like(db.Model):
+    post_id = db.StringProperty(required =True)
+    owner = db.StringProperty(required = True)
+
 class BlogFront(BlogHandler):
     def get(self):
         if self.user:
           # I am logged in here.
           posts = Post.all().order('-created').filter('owner = ', self.user.name)
+          other_posts = Post.all().filter('owner != ', self.user.name)
         else:
           posts = Post.all().order('-created')
+          other_posts = []
 
-        self.render('front.html', posts = posts)
+        self.render('front.html', posts = posts, other_posts=other_posts)
 
 class PostPage(BlogHandler):
     def get(self, post_id):
+        if not self.user:
+            self.redirect('/login')
+            return
+
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
@@ -147,7 +164,34 @@ class PostPage(BlogHandler):
             self.error(404)
             return
 
+
+        comments = Comment.all().order('-created').filter('post_id = ', post_id)
+        post.comments = comments
+        post.is_permalink= True
+        post.is_liked = False
+
+        if self.user.name != post.owner:
+            post.show_like = True
+            query = Like.all().filter('post_id =', post_id).filter('owner =', self.user.name)
+            results = query.fetch(1)
+            if results:
+                post.is_liked = True
+
+
+
         self.render("permalink.html", post = post)
+
+    def post(self, post_id):
+        if not self.user:
+            self.redirect('/login')
+            return
+
+        comment = self.request.get('comment')
+        c = Comment(parent=blog_key(), post_id=post_id,
+                    owner = self.user.name, content = comment)
+        c.put()
+        self.redirect('/blog/%s' % post_id)
+
 
 class NewPost(BlogHandler):
     def get(self):
@@ -159,6 +203,7 @@ class NewPost(BlogHandler):
     def post(self):
         if not self.user:
             self.redirect('/')
+            return
 
         subject = self.request.get('subject')
         content = self.request.get('content')
@@ -266,11 +311,21 @@ class EditPost(BlogHandler):
             self.error(404)
             return
 
+        if(post.owner != self.user.name):
+            self.redirect('/blog/%s' % post_id)
+            return
+
+
+
         self.render("newpost.html", subject = post.subject, content = post.content)
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
+
+        if(post.owner != self.user.name):
+            self.redirect('/blog/%s' % post_id)
+            return
 
         subject = self.request.get('subject')
         content = self.request.get('content')
@@ -292,11 +347,28 @@ class DeletePost(BlogHandler):
 
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
+
+        if not post:
+            self.error(404)
+            return
+
+        if(post.owner != self.user.name):
+            self.redirect('/blog/%s' % post_id)
+            return
+
         self.render("delete-post.html", subject=post.subject)
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
+
+        if not post:
+            self.error(404)
+            return
+
+        if(post.owner != self.user.name):
+            self.redirect('/blog/%s' % post_id)
+            return
 
         q = self.request.get('q')
 
@@ -305,6 +377,59 @@ class DeletePost(BlogHandler):
             self.redirect('/')
         else:
             self.redirect('/')
+
+class DeleteComment(BlogHandler):
+    def get(self, comment_id):
+        key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
+        comment = db.get(key)
+
+        if(comment.owner != self.user.name):
+            self.redirect('/blog/%s' % comment.post_id)
+            return
+
+        comment.delete()
+        self.redirect('/blog/%s' % comment.post_id)
+
+class EditComment(BlogHandler):
+    def get(self, comment_id):
+        key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
+        comment = db.get(key)
+        c = comment.content
+
+        if(comment.owner != self.user.name):
+            self.redirect('/blog/%s' % comment.post_id)
+            return
+
+        self.render('edit_comment.html', content = c)
+
+    def post(self, comment_id):
+        key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
+        comment = db.get(key)
+
+        if(comment.owner != self.user.name):
+            self.redirect('/blog/%s' % comment.post_id)
+            return
+
+        content = self.request.get('content')
+        comment.content = content
+        comment.put()
+
+        self.redirect('/blog/%s' % comment.post_id)
+
+class LikePost(BlogHandler):
+    def get(self, post_id):
+        query = Like.all().filter('post_id = ', post_id).filter('owner = ', self.user.name)
+        results = query.fetch(1)
+        if results:
+            print('It has already been liked')
+            results[0].delete()
+            self.redirect('/blog/%s' % post_id)
+            return
+
+        print('Not yet')
+        l = Like(parent=blog_key(), post_id=post_id, owner=self.user.name)
+        l.put()
+        self.redirect('/blog/%s' % post_id)
 
 
 
@@ -328,6 +453,9 @@ app = webapp2.WSGIApplication([('/', BlogFront),
                                ('/logout', Logout),
                                ('/dropall', DropAll),
                                ('/edit/([0-9]+)', EditPost),
-                               ('/delete/([0-9]+)', DeletePost)
+                               ('/delete/([0-9]+)', DeletePost),
+                               ('/delete_comment/([0-9]+)', DeleteComment),
+                               ('/edit_comment/([0-9]+)', EditComment),
+                               ('/liked/([0-9]+)', LikePost)
                                ],
                               debug=True)
