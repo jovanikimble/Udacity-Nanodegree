@@ -1,0 +1,23 @@
+CLients and Servers:
+  - computers communicating over the internet.
+  - client - wants info (initiates)
+  - server - has info
+
+  - protocols make sure all machines are communicating in the same way
+    - [Transmission Control Protocol] TCP (broken into small packets)
+      - [User Datagram Protocol] UDP - TCP's counterpart and good for streaming
+
+    - [Internet Protocol] IP (similar to postal addresses, every device has one, allowsmessages to be properly routed, uses ip address found in dns to initiate communication with server for that web app)
+      - os's use ports to designate channels of commuanication on the same ip address.
+      - colon after ip address with another number(ie. 8080) indicates that we want to communicate on a specific port on a device using that ip address
+
+    Fun Fact: localhost ip address = 127.0.0.1 (when client and server on same machine)
+
+    - [] HTTP (clients tell servers what they want by using an HTTP verb or an http method, there are 9 http verbs. Get and Post are most common)
+      - GET(safe method), wants info from server
+      - POST, wants to modify info on server
+      - Servers respond to reuest with status codes. Examples:
+        200: Successful GET
+        301: Successful POST
+        404: File not found
+

@@ -1,0 +1,41 @@
+CREATE READ UPDATE DELETE
+
+SQL is the popular language for communicating with/ talking to databases.
+
+ORM, Object Relational Mapping:
+  - can be thought of as a translator
+  - Example python object translated by the ORM as an SQL statement
+
+SQLAlchemy
+  - allows us to write a single python file to setup and configure our database.
+  - 4 major coding components.
+    - Configuaration code: import necessary modules
+      - generally does not change from project to project
+      - imports all modules needed
+      - creates instance of declaritive base
+      - at end of file creates or connects the database and adds tables and columns.
+    - Class code: used to import or data in python
+      - representation of table as a python class
+      - extends the Base class
+      - nested inside will be table and mapper code
+    - Table code: represents specific table in our datbase
+    - Mapper code: connects the columns of our table to the
+    class that represents it.
+      - creates variables that we will use to create columns
+      within our database
+      - when we create a column we must also pass in attributes, examples:
+        - String(250) (Specified maximum length)
+        - Integer
+        - relationship(Class)
+        - nullable = False
+        - primary_key = True
+        - ForeignKey('some_table_id')
+    UPDATE:
+      1. Find entry
+      2. Resett values
+      3. Add to session
+      4. session.commit()
+    DELETE:
+      1. Find entry
+      2. session.delete(entry)
+      3. session.commut()
