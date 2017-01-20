@@ -14,10 +14,10 @@ CREATE TABLE players (
   wins integer
 );
 
-DROP TABLE IF EXISTS players;
+DROP TABLE IF EXISTS matches;
 CREATE TABLE matches (
   id serial,
-  pid1 integer,
-  pid2 integer,
-  winner integer
+  winner integer,
+  loser integer
 );
+
