@@ -4,11 +4,11 @@ from flask import render_template
 from sqlalchemy import create_engine
 from flask.views import MethodView
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base, Restaurant, MenuItem
+from database_setup import Base, User, Category, Item
+from database_setup import engine
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -37,6 +37,17 @@ class MainView(MethodView):
     def get(self):
         return render_template('main.html')
 
+class SetupView(MethodView):
+
+    def get(self):
+        c = Category(name='Cakeh')
+        session.add(c)
+        session.commit()
+        return"done"
+
+handler.add_url_rule(
+    '/setup', view_func=SetupView.as_view('setup_view')
+    )
 handler.add_url_rule(
     '/restaurants/<int:restaurant_id>/',
     view_func=RestaurantView.as_view('restaurant_view'))

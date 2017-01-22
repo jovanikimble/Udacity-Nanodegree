@@ -1,34 +1,41 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+import datetime
+from sqlalchemy import Column, ForeignKey, Integer, String, Text, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 
 Base = declarative_base()
 
-class Restaurant(Base):
+class User(Base):
 
-  __tablename__ = 'restaurant'
+  __tablename__ = 'users'
+
+  id = Column(Integer, primary_key=True)
+  name = Column(String(255), nullable=False)
+
+class Category(Base):
+
+  __tablename__ = 'categories'
 
   id = Column(Integer, primary_key = True)
-  name = Column (String(80), nullable = False)
+  name = Column(String(255), nullable=False)
 
-class MenuItem(Base):
+class Item(Base):
 
-  __tablename__ = 'menu_item'
+  __tablename__ = 'items'
 
-  name = Column(String(80), nullable = False)
-  id = Column(Integer, primary_key=True)
-  description = Column(String(250))
-  price = Column(String(8))
-  course = Column(String(250))
-  restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
-  restaurant = relationship(Restaurant)
-
+  id = Column(Integer, primary_key = True)
+  user_id = Column(Integer, ForeignKey('users.id'))
+  category_id = Column(Integer, ForeignKey('categories.id'))
+  name = Column(String(255), nullable=False)
+  description = Column(Text, nullable=False)
+  added = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
 ####insert at end of file ####
 engine = create_engine(
-  'sqlite:///restaurantmenu.db')
+  'postgresql+psycopg2://jojo:123@localhost/catalog')
 
+#Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(engine)
