@@ -49,7 +49,12 @@ class MainView(MethodView):
         context['login_session'] = login_session
 
         categories = session.query(Category).all()
+
+        results = session.query(Category, Item).join(Item).order_by(
+            Item.added.desc()).limit(10).all()
+
         context['categories'] = categories
+        context['recent_results'] = results
         return render_template('main.html',context=context)
 
 class CategoryView(MethodView):

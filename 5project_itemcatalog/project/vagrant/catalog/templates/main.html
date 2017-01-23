@@ -11,8 +11,11 @@
       {% endfor %}
     </div>
 
-    <div class="col-md-8">
-      <h3 class="text-center">Latest Items</h3>
+    <div class="col-md-8 text-center">
+      <h3>Latest Items</h3>
+      {% for category, item in context.recent_results %}
+        <div><a href="/catalog/{{category.name}}/{{item.name}}">{{item.name}} ({{category.name}})</a></div>
+      {% endfor %}
     </div>
     <div class="col-md-2">
       <a href='/catalog/additem' class="text-center">Add Item</h3>
