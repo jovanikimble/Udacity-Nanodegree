@@ -35,7 +35,6 @@ class Item(Base):
 
 ####insert at end of file ####
 engine = create_engine(
-  'postgresql+psycopg2://jojo:123@localhost/catalog')
+  'postgresql+psycopg2://vagrant:123@localhost/catalog')
 
-#Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(engine)
