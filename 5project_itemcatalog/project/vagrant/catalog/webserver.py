@@ -8,6 +8,7 @@ from flask.views import MethodView
 
 import httplib2
 import json
+from flask import jsonify
 from flask import request
 from flask import session as login_session
 from flask import redirect
@@ -56,6 +57,23 @@ class MainView(MethodView):
         context['categories'] = categories
         context['recent_results'] = results
         return render_template('main.html',context=context)
+
+class CatalogJSONView(MethodView):
+
+    def get(self):
+        results = session.query(Category, Item).join(Item).order_by(
+            Item.added.desc()).all()
+
+        d = {'Items': []}
+        for category, item in results:
+            obj = {
+              'CategoryName': category.name,
+              'Name': item.name,
+              'Description': item.description
+            }
+            d['Items'].append(obj)
+
+        return jsonify(d)
 
 class CategoryView(MethodView):
 
@@ -353,6 +371,9 @@ handler.add_url_rule(
 handler.add_url_rule(
     '/catalog/<string:category_name>/<string:item_name>/delete',
     view_func=DeleteView.as_view('delete_view'))
+
+handler.add_url_rule('/catalog.json',
+    view_func=CatalogJSONView.as_view('catalog_json_view'))
 
 handler.add_url_rule('/login',
     view_func=LoginView.as_view('login_view'))
