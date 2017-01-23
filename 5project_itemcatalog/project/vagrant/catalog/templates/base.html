@@ -9,18 +9,20 @@
     <link type="text/css" rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/bootstrap.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% block headpart %}
+
+    {% endblock %}
   </head>
   <body>
     <div class="container">
       <div class="row-fluid">
         <div class="col-md-12">
           <div class="login-area">
-            {% if user %}
-              {{user.name}} (<a class="login-link" href="/logout">logout</a>)
+            {% if context.login_session and context.login_session.name %}
+              <img height="20px" width="20px" src="{{context.login_session.picture}}"></img>
+              {{context.login_session.name}} (<a class="login-link" href="/logout">logout</a>)
             {% else %}
               <a class="login-link" href="/login">login</a>
-              |
-              <a class="login-link" href="/signup">signup</a>
             {% endif %}
           </div>
         </div>
