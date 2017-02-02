@@ -1,4 +1,4 @@
-var nm = {map: null, page: null};
+var nm = {map: null, page: null, curInfoWindow: null};
 
 nm.part1 = '<div id="content">'+
            '<div id="siteNotice">'+
@@ -48,17 +48,61 @@ nm.Location.prototype.name = function() {
 }
 
 nm.Location.prototype.onSelected = function() {
- var self = this;
+  var self = this;
 
- var curMarker = this.marker;
- curMarker.setAnimation(google.maps.Animation.BOUNCE);
- setTimeout(function(){ curMarker.setAnimation(null); }, 750);
+  var curMarker = this.marker;
+  curMarker.setAnimation(google.maps.Animation.BOUNCE);
+  setTimeout(function(){ curMarker.setAnimation(null); }, 750);
 
- if (nm.page.openInfoWindow) {
-   nm.page.openInfoWindow.close();
- }
- this.infoWindow.open(nm.page.map, curMarker);
- nm.page.openInfoWindow = this.infoWindow;
+  if (self.infoWindow != null) {
+    this.showInfoWindow(self.infoWindow._content);
+    return;
+  }
+
+  $.ajax({
+     url: 'https://en.wikipedia.org/w/api.php?action=opensearch&limit=1&format=json&search=' + this.info.wikiTitle,
+     dataType: 'jsonp',
+   }).done(function(data) {
+     var content = data[2][0];
+     var bodyContent = content;
+
+     var yelpUrl = '/get_location_info?title=' + self.info.yelpTitle;
+     $.ajax({
+       url: yelpUrl,
+       dataType: 'json'
+     }).done(function(data) {
+       if (data['status'] != 'OK') {
+         self.showInfoWindow(data['msg']);
+         return;
+       }
+       window.console.log(data);
+
+       bodyContent += '<br/><br/><div><b>Contact</b></div>';
+       bodyContent += '<div>'+ data.biz.phone +'</div>';
+
+       bodyContent += '<br/><div><b>Reviews</b></div>';
+       bodyContent += '<div><img src="' + data.biz.rating_img_url + '"></img></div>';
+       bodyContent += '<div>' + data.biz.snippet + '</div>';
+
+       var htmlContent = '<div id="content">'+
+             '<div id="siteNotice">'+
+             '</div>'+
+             '<h1 class="firstHeading">' + self.name() +
+             '</h1>'+
+             '<div id="bodyContent">' + bodyContent +
+             '</div>'+
+             '</div>';
+
+       self.showInfoWindow(htmlContent);
+     }).fail(function(data) {
+       self.showInfoWindow('Getting location info failed !' + JSON.stringify(data));
+     });
+
+   }).fail(function(data) {
+     self.showInfoWindow('Getting Wikipedia data failed! ');
+  });
+
+  self.showInfoWindow("Loading...");
 }
 
 nm.Location.prototype.setup = function() {
@@ -68,13 +112,21 @@ nm.Location.prototype.setup = function() {
      animation: google.maps.Animation.DROP
  });
 
- this.infoWindow = new google.maps.InfoWindow({
-       content: nm.part1 + this.name() + nm.part2
- });
-
  this.marker.addListener('click', function() {
    this.onSelected();
  }.bind(this));
+}
+
+nm.Location.prototype.showInfoWindow = function(content) {
+ this.infoWindow = new google.maps.InfoWindow({
+     content: content
+ });
+ this.infoWindow._content = content;
+ if (nm.curInfoWindow != null) {
+   nm.curInfoWindow.close();
+ }
+ this.infoWindow.open(nm.page.map, this.marker);
+ nm.curInfoWindow = this.infoWindow;
 }
 
 
@@ -82,31 +134,59 @@ nm.Location.prototype.setup = function() {
 nm.locations = [
    new nm.Location(
      {lat: 37.785718, lng: -122.401051},
-     {name: 'MOMA'}
+     {
+       name: 'MOMA',
+       wikiTitle: 'San_Francisco_Museum_of_Modern_Art',
+       yelpTitle: 'Museum of Modern Art'
+     }
    ),
    new nm.Location(
      {lat: 37.801436, lng: -122.458761},
-     {name: 'Walt Disney Museum'}
+     {
+       name: 'Walt Disney Museum',
+       wikiTitle: 'Walt_Disney_Family_Museum',
+       yelpTitle: 'Walt Disney Family Museum'
+     }
    ),
    new nm.Location(
      {lat: 37.771469, lng: -122.468676},
-     {name: 'de Young Museum'}
+     {
+       name: 'de Young Museum',
+       wikiTitle: 'De_Young_(museum)',
+       yelpTitle: 'de Young Museum'
+     }
    ),
    new nm.Location(
      {lat: 37.786562, lng: -122.401361},
-     {name: 'Museum of African Diaspora'}
+     {
+       name: 'Museum of African Diaspora',
+       wikiTitle: 'Museum_of_the_African_Diaspora',
+       yelpTitle: 'Museum of The African Diaspora'
+     }
    ),
    new nm.Location(
      {lat: 37.794704, lng: -122.411720},
-     {name: 'Cable Car Museum'}
+     {
+       name: 'Cable Car Museum',
+       wikiTitle: 'San_Francisco_Cable_Car_Museum',
+       yelpTitle: 'San Francisco Cable Car Museum'
+     }
    ),
    new nm.Location(
      {lat: 37.806842, lng: -122.430675},
-     {name: 'The Mexican Museum'}
+     {
+       name: 'The Mexican Museum',
+       wikiTitle: 'Mexican_Museum',
+       yelpTitle: 'The Mexican Museum'
+     }
    ),
    new nm.Location(
      {lat: 37.800843, lng: -122.398630},
-     {name: 'The Exploratorium'}
+     {
+       name: 'The Exploratorium',
+       wikiTitle: 'Exploratorium',
+       yelpTitle: 'Exploratorium'
+     }
    )
 ];
 

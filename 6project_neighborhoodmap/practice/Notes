@@ -1,0 +1,17 @@
+Intro to AJAX:
+
+- Internet = people sending messages back and forth
+- Client - Internet - Server
+- Client sends a get request to server
+- Internet passes the messages along
+- Server sends a response back.
+
+When browsers make a request without AJAX it has to wait for the page to load.
+
+- AJAX allows for ascynchronous behavior happening in the backgroung without waiting for the page to load
+
+- AJAX = Asynchronuous Javascript and XML request - allow for content retrieval and display without reloading the webpage - requests do not block other events from happening.
+- AJAX = Asynchronuous Javascript and JSON request
+ - Html is often embedded within AJAX request
+
+ - An asynchronous request can be fired off at any time and is often the respoonse is HTML to be inserted dynamically into the page.
