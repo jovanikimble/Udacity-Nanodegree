@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neighborhood Map</title>
+
+    <!--CSS-->
+
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300i,400,400i,500,500i" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/static/css/main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="/static/css/simple-sidebar.css">
+
+    <!-- JS -->
+
+    <script
+  src="https://code.jquery.com/jquery-3.1.1.min.js"
+  integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+  crossorigin="anonymous"></script>
+  <script src="/static/js/knockout-3.4.1.js"></script>
+  <script src="/static/js/main.js"></script>
+    {% block headpart %}
+
+    {% endblock %}
+  </head>
+  <body>
+
+    <div id="wrapper">
+
+      <div id="sidebar-wrapper">
+        <ul class="sidebar-nav">
+
+          <li class="sidebar-brand">
+            <a href="#">
+              San Francisco Museums
+            </a>
+          </li>
+
+          <li>
+            <input type="text" class="form-control" placeholder="Search by Museum Name" data-bind="value: museumSearchName, valueUpdate: 'keyup'"></input>
+          </li>
+
+          <li data-bind="foreach: locations">
+            <a href="#" data-bind="text: name(), click: $root.locationClicked, visible: shouldShow()"></a>
+          </li>
+
+        </ul>
+      </div>
+      <!-- sidebar wrapper -->
+
+      <div id="page-content-wrapper">
+        <div class="container-fluid">
+          <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">
+             <span class="glyphicon glyphicon-menu-hamburger"></span>
+          </a>
+          <div class="row" id="mainrow" style="visibility:none;">
+            <div class="col-md-12 full">
+              <div id="map"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--page-content-wrapper-->
+
+    </div>
+    <!-- wrapper -->
+
+
+
+    {% block content %}
+    {% endblock %}
+  </body>
+  <script src="/static/js/bootstrap.min.js"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAykI98Ztej7MvMw0gi5WhcCehoLizlAaU&callback=nm.initMap"
+    async defer></script>
+</html>
+
+
+

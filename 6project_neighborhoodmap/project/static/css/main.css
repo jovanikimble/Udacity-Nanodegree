@@ -1,0 +1,30 @@
+.login-area {
+  float: right;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+}
+
+ html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+#maindiv {
+  width: 100%;
+  height: 100%;
+}
+
+.full {
+  height: 100%;
+}
+
+#mainrow {
+  margin-top: 10px;
+  height: 500px;
+  max-height: 800px;
+}
