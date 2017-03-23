@@ -8,7 +8,7 @@
 
 DROP TABLE IF EXISTS players;
 CREATE TABLE players (
-  id serial,
+  id serial PRIMARY KEY,
   name text,
   matches integer,
   wins integer
@@ -16,7 +16,7 @@ CREATE TABLE players (
 
 DROP TABLE IF EXISTS matches;
 CREATE TABLE matches (
-  id serial,
+  id serial PRIMARY KEY,
   winner integer,
   loser integer
 );

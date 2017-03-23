@@ -57,8 +57,6 @@ def registerPlayer(name):
     conn.commit()
     conn.close()
 
-
-
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
@@ -126,6 +124,8 @@ def swissPairings():
 
     count = 0
 
+    # Players have already been sorted. This matches
+    # similar players based on their wins for a match.
     for i in xrange(len(results)/2):
         tup = (results[count][0],results[count][1],
                results[count+1][0],results[count+1][1])
