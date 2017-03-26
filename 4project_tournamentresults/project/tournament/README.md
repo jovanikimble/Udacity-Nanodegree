@@ -58,11 +58,9 @@ $ cd /vagrant/tournament
 Then you will use psql to setup the database.
 
 $ psql
-$ CREATE DATABASE tournament;
-$ \c tournament
 $ \i tournament.sql
 
-Now exit out of psql.
+Now exit out of psql (Ctrl + D).
 
 To run the tournament code, do the following in the terminal:
 
