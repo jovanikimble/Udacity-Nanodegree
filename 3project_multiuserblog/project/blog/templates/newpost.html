@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row-fluid center-block">
       <div class="col-md-12">
-        <h2 class="text-left new-post">New Post</h2>
+        <h2 class="text-left new-post">{{page_title}}</h2>
         <form method="post">
           <label>
             <div class="fields">Subject</div>
@@ -15,7 +15,7 @@
             <textarea name="content">{{content}}</textarea>
           </label>
           <div class="error">{{error}}</div>
-          <input type="submit" value="P o s t">
+          <input type="submit" value="P o s t">&nbsp;<button><a href="/">Cancel</a></button>
         </form>
       </div>
     </div>

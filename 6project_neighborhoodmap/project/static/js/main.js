@@ -247,6 +247,10 @@ nm.Page.prototype.init = function() {
 
 };
 
+nm.handleError = function() {
+  alert("There was an error loading the application.");
+}
+
 nm.initMap = function() {
   nm.page = new nm.Page();
   nm.page.init();

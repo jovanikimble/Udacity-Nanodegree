@@ -196,7 +196,7 @@ class PostPage(BlogHandler):
 class NewPost(BlogHandler):
     def get(self):
         if self.user:
-            self.render("newpost.html")
+            self.render("newpost.html", page_title="New Post")
         else:
             self.redirect("/login")
 
@@ -216,7 +216,9 @@ class NewPost(BlogHandler):
             self.redirect('/blog/%s' % str(p.key().id()))
         else:
             error = "subject and content, please!"
-            self.render("newpost.html", subject=subject, content=content, error=error)
+            self.render(
+                "newpost.html", subject=subject,
+                content=content, error=error, page_title="Edit Post")
 
 
 USER_RE = re.compile(r"^[a-zA-Z0-9_-]{3,20}$")
@@ -317,7 +319,9 @@ class EditPost(BlogHandler):
 
 
 
-        self.render("newpost.html", subject = post.subject, content = post.content)
+        self.render(
+            "newpost.html", subject = post.subject, content = post.content,
+            page_title="Edit Page")
 
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
@@ -400,7 +404,7 @@ class EditComment(BlogHandler):
             self.redirect('/blog/%s' % comment.post_id)
             return
 
-        self.render('edit_comment.html', content = c)
+        self.render('edit_comment.html', content = c, post_id=comment.post_id)
 
     def post(self, comment_id):
         key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
