@@ -11,9 +11,7 @@ CREATE DATABASE tournament;
 
 CREATE TABLE players (
   id serial PRIMARY KEY,
-  name text,
-  matches integer,
-  wins integer
+  name text
 );
 
 CREATE TABLE matches (

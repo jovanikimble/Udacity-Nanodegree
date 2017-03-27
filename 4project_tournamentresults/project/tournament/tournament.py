@@ -20,8 +20,6 @@ def deleteMatches():
     """Remove all the match records from the database."""
     conn, cursor = connect()
     cursor.execute('TRUNCATE matches;')
-    cursor.execute('UPDATE players SET wins = 0;')
-    cursor.execute('UPDATE players SET matches = 0;')
     conn.commit()
     conn.close()
 
@@ -54,7 +52,7 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     conn, cursor = connect()
-    cursor.execute('insert into players(name, matches, wins) values(%s, 0, 0);', (name,))
+    cursor.execute('insert into players(name) values(%s);', (name,))
     conn.commit()
     conn.close()
 
@@ -72,7 +70,12 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     conn, cursor = connect()
-    cursor.execute('select id, name, wins, matches from players order by wins desc;')
+    cursor.execute(
+        'CREATE TEMP VIEW loss1 AS SELECT loser, COUNT(loser) as losses FROM matches GROUP BY loser;'
+        'CREATE TEMP VIEW wins1 AS SELECT winner, COUNT(winner) as wins FROM matches GROUP BY winner;'
+        'CREATE TEMP VIEW t1 AS SELECT COALESCE(loser, winner) as id, COALESCE(losses, 0) as losses, COALESCE(wins, 0) as wins FROM loss1 FULL OUTER JOIN wins1 ON loser = winner;'
+        'SELECT players.id, players.name, COALESCE(t1.wins, 0), COALESCE(t1.wins + t1.losses, 0) FROM players LEFT JOIN t1 ON t1.id = players.id ORDER BY wins DESC;'
+    )
     results = cursor.fetchall()
     conn.close()
 
@@ -89,9 +92,6 @@ def reportMatch(winner, loser):
 
     conn, cursor = connect()
     cursor.execute('insert into matches(winner, loser) values(%s, %s)', (winner,loser))
-    cursor.execute('UPDATE players SET wins = wins + 1 WHERE id = %s;', (winner,))
-    cursor.execute('UPDATE players SET matches = matches + 1 WHERE id = %s;', (winner,))
-    cursor.execute('UPDATE players SET matches = matches + 1 WHERE id = %s;', (loser,))
     conn.commit()
     conn.close()
 
