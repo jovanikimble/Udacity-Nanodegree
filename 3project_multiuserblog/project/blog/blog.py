@@ -4,7 +4,7 @@ import random
 import hashlib
 import hmac
 from string import letters
-
+from functools import wraps
 import webapp2
 import jinja2
 
@@ -27,6 +27,30 @@ def check_secure_val(secure_val):
     val = secure_val.split('|')[0]
     if secure_val == make_secure_val(val):
         return val
+
+def user_logged_in(function):
+
+    @wraps(function)
+    def wrapper(self, post_id=None):
+        if not self.user:
+            self.redirect('/login')
+            return
+
+        return function(self, post_id)
+
+    return wrapper
+
+def post_exists(function):
+    @wraps(function)
+    def wrapper(self, post_id):
+        key = db.Key.from_path('Post', int(post_id))
+        post = db.get(key)
+        if post:
+            return function(self, post_id, post)
+        else:
+            self.error(404)
+            return
+    return wrapper
 
 class BlogHandler(webapp2.RequestHandler):
     def write(self, *a, **kw):
@@ -59,6 +83,9 @@ class BlogHandler(webapp2.RequestHandler):
         webapp2.RequestHandler.initialize(self, *a, **kw)
         uid = self.read_secure_cookie('user_id')
         self.user = uid and User.by_id(int(uid))
+
+    def user_owns_post(self, post):
+        return self.user.name == post.owner
 
 def render_post(response, post):
     response.out.write('<b>' + post.subject + '</b><br>')
@@ -140,6 +167,7 @@ class Like(db.Model):
     owner = db.StringProperty(required = True)
 
 class BlogFront(BlogHandler):
+
     def get(self):
         if self.user:
           # I am logged in here.
@@ -152,18 +180,15 @@ class BlogFront(BlogHandler):
         self.render('front.html', posts = posts, other_posts=other_posts)
 
 class PostPage(BlogHandler):
-    def get(self, post_id):
-        if not self.user:
-            self.redirect('/login')
-            return
 
+    @user_logged_in
+    def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
         if not post:
             self.error(404)
             return
-
 
         comments = Comment.all().order('-created').filter('post_id = ', post_id)
         post.comments = comments
@@ -177,13 +202,15 @@ class PostPage(BlogHandler):
             if results:
                 post.is_liked = True
 
-
-
         self.render("permalink.html", post = post)
 
+    @user_logged_in
     def post(self, post_id):
-        if not self.user:
-            self.redirect('/login')
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        if not post:
+            self.error(404)
             return
 
         comment = self.request.get('comment')
@@ -194,17 +221,13 @@ class PostPage(BlogHandler):
 
 
 class NewPost(BlogHandler):
-    def get(self):
-        if self.user:
-            self.render("newpost.html", page_title="New Post")
-        else:
-            self.redirect("/login")
 
-    def post(self):
-        if not self.user:
-            self.redirect('/')
-            return
+    @user_logged_in
+    def get(self, post_id=None):
+        self.render("newpost.html", page_title="New Post")
 
+    @user_logged_in
+    def post(self, post_id=None):
         subject = self.request.get('subject')
         content = self.request.get('content')
 
@@ -234,6 +257,7 @@ def valid_email(email):
     return not email or EMAIL_RE.match(email)
 
 class Signup(BlogHandler):
+
     def get(self):
         self.render("signup-form.html")
 
@@ -271,6 +295,7 @@ class Signup(BlogHandler):
         raise NotImplementedError
 
 class Register(Signup):
+
     def done(self):
         #make sure the user doesn't already exist
         u = User.by_name(self.username)
@@ -285,6 +310,7 @@ class Register(Signup):
             self.redirect('/')
 
 class Login(BlogHandler):
+
     def get(self):
         self.render('login-form.html')
 
@@ -301,11 +327,9 @@ class Login(BlogHandler):
             self.render('login-form.html', error = msg)
 
 class EditPost(BlogHandler):
-    def get(self, post_id):
-        if not self.user:
-            self.redirect('/login')
-            return
 
+    @user_logged_in
+    def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
@@ -313,22 +337,25 @@ class EditPost(BlogHandler):
             self.error(404)
             return
 
-        if(post.owner != self.user.name):
-            self.redirect('/blog/%s' % post_id)
+        if not self.user_owns_post(post):
+            self.redirect('/')
             return
-
-
 
         self.render(
             "newpost.html", subject = post.subject, content = post.content,
             page_title="Edit Page")
 
+    @user_logged_in
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
-        if(post.owner != self.user.name):
-            self.redirect('/blog/%s' % post_id)
+        if not post:
+            self.error(404)
+            return
+
+        if not self.user_owns_post(post):
+            self.redirect('/')
             return
 
         subject = self.request.get('subject')
@@ -344,11 +371,9 @@ class EditPost(BlogHandler):
             self.render("newpost.html", subject=subject, content=content, error=error)
 
 class DeletePost(BlogHandler):
-    def get(self, post_id):
-        if not self.user:
-            self.redirect('/login')
-            return
 
+    @user_logged_in
+    def get(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
 
@@ -356,12 +381,13 @@ class DeletePost(BlogHandler):
             self.error(404)
             return
 
-        if(post.owner != self.user.name):
-            self.redirect('/blog/%s' % post_id)
+        if not self.user_owns_post(post):
+            self.redirect('/')
             return
 
         self.render("delete-post.html", subject=post.subject)
 
+    @user_logged_in
     def post(self, post_id):
         key = db.Key.from_path('Post', int(post_id), parent=blog_key())
         post = db.get(key)
@@ -370,8 +396,8 @@ class DeletePost(BlogHandler):
             self.error(404)
             return
 
-        if(post.owner != self.user.name):
-            self.redirect('/blog/%s' % post_id)
+        if not self.user_owns_post(post):
+            self.redirect('/')
             return
 
         q = self.request.get('q')
@@ -383,11 +409,17 @@ class DeletePost(BlogHandler):
             self.redirect('/')
 
 class DeleteComment(BlogHandler):
+
+    @user_logged_in
     def get(self, comment_id):
         key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
         comment = db.get(key)
 
-        if(comment.owner != self.user.name):
+        if not comment:
+            self.redirect('/')
+            return
+
+        if comment.owner != self.user.name:
             self.redirect('/blog/%s' % comment.post_id)
             return
 
@@ -395,22 +427,34 @@ class DeleteComment(BlogHandler):
         self.redirect('/blog/%s' % comment.post_id)
 
 class EditComment(BlogHandler):
+
+    @user_logged_in
     def get(self, comment_id):
         key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
         comment = db.get(key)
+
+        if not comment:
+            self.redirect('/')
+            return
+
         c = comment.content
 
-        if(comment.owner != self.user.name):
+        if comment.owner != self.user.name:
             self.redirect('/blog/%s' % comment.post_id)
             return
 
         self.render('edit_comment.html', content = c, post_id=comment.post_id)
 
+    @user_logged_in
     def post(self, comment_id):
         key = db.Key.from_path('Comment', int(comment_id), parent=blog_key())
         comment = db.get(key)
 
-        if(comment.owner != self.user.name):
+        if not comment:
+            self.redirect('/')
+            return
+
+        if comment.owner != self.user.name:
             self.redirect('/blog/%s' % comment.post_id)
             return
 
@@ -421,16 +465,23 @@ class EditComment(BlogHandler):
         self.redirect('/blog/%s' % comment.post_id)
 
 class LikePost(BlogHandler):
+
+    @user_logged_in
     def get(self, post_id):
+        key = db.Key.from_path('Post', int(post_id), parent=blog_key())
+        post = db.get(key)
+
+        if not post:
+            self.error(404)
+            return
+
         query = Like.all().filter('post_id = ', post_id).filter('owner = ', self.user.name)
         results = query.fetch(1)
         if results:
-            print('It has already been liked')
             results[0].delete()
             self.redirect('/blog/%s' % post_id)
             return
 
-        print('Not yet')
         l = Like(parent=blog_key(), post_id=post_id, owner=self.user.name)
         l.put()
         self.redirect('/blog/%s' % post_id)
@@ -438,11 +489,13 @@ class LikePost(BlogHandler):
 
 
 class Logout(BlogHandler):
+
     def get(self):
         self.logout()
         self.redirect('/')
 
 class DropAll(BlogHandler):
+
     def get(self):
         db.delete(Post.all())
         db.delete(User.all())
