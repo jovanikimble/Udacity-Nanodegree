@@ -6,15 +6,17 @@
 import psycopg2
 import sys
 
+
 def connect(dbname="tournament"):
     """Connect to the PostgreSQL database.  Returns a database connection."""
     try:
         conn = psycopg2.connect("dbname={0}".format(dbname))
         cursor = conn.cursor()
         return conn, cursor
-    except:
+    except BaseException:
         print("Connection could not be made")
         sys.exit(1)
+
 
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -56,11 +58,12 @@ def registerPlayer(name):
     conn.commit()
     conn.close()
 
+
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place, or a
+    player tied for first place if there is currently a tie.
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -71,10 +74,19 @@ def playerStandings():
     """
     conn, cursor = connect()
     cursor.execute(
-        'CREATE TEMP VIEW loss1 AS SELECT loser, COUNT(loser) as losses FROM matches GROUP BY loser;'
-        'CREATE TEMP VIEW wins1 AS SELECT winner, COUNT(winner) as wins FROM matches GROUP BY winner;'
-        'CREATE TEMP VIEW t1 AS SELECT COALESCE(loser, winner) as id, COALESCE(losses, 0) as losses, COALESCE(wins, 0) as wins FROM loss1 FULL OUTER JOIN wins1 ON loser = winner;'
-        'SELECT players.id, players.name, COALESCE(t1.wins, 0), COALESCE(t1.wins + t1.losses, 0) FROM players LEFT JOIN t1 ON t1.id = players.id ORDER BY wins DESC;'
+        'CREATE TEMP VIEW loss1 AS SELECT loser, COUNT(loser) as losses FROM '
+        'matches GROUP BY loser;'
+        ''
+        'CREATE TEMP VIEW wins1 AS SELECT winner, COUNT(winner) as wins FROM '
+        'matches GROUP BY winner;'
+        ''
+        'CREATE TEMP VIEW t1 AS SELECT COALESCE(loser, winner) as id, '
+        'COALESCE(losses, 0) as losses, COALESCE(wins, 0) as wins FROM '
+        'loss1 FULL OUTER JOIN wins1 ON loser = winner;'
+        ''
+        'SELECT players.id, players.name, COALESCE(t1.wins, 0), '
+        'COALESCE(t1.wins + t1.losses, 0) FROM players LEFT JOIN t1 '
+        'ON t1.id = players.id ORDER BY wins DESC;'
     )
     results = cursor.fetchall()
     conn.close()
@@ -91,10 +103,10 @@ def reportMatch(winner, loser):
     """
 
     conn, cursor = connect()
-    cursor.execute('insert into matches(winner, loser) values(%s, %s)', (winner,loser))
+    cursor.execute(
+        'insert into matches(winner, loser) values(%s, %s)', (winner, loser))
     conn.commit()
     conn.close()
-
 
 
 def swissPairings():
@@ -121,9 +133,9 @@ def swissPairings():
 
     # Players have already been sorted. This matches
     # similar players based on their wins for a match.
-    for i in xrange(len(results)/2):
-        tup = (results[count][0],results[count][1],
-               results[count+1][0],results[count+1][1])
+    for i in xrange(len(results) / 2):
+        tup = (results[count][0], results[count][1],
+               results[count + 1][0], results[count + 1][1])
 
         pairs.append(tup)
         count += 2
