@@ -80,6 +80,27 @@ class MainView(MethodView):
         context['recent_results'] = results
         return render_template('main.html', context=context)
 
+class ItemJSONView(MethodView):
+
+    def get(self, category_name, item_name):
+        category = session.query(Category).filter_by(
+            name=category_name).first()
+
+        if category is None:
+            return jsonify({'Error': 'Category does not exist'})
+
+        item = session.query(Item).filter_by(
+            name=item_name, category_id=category.id).first()
+
+        if item is None:
+            return jsonify({'Error': 'That item does not exist.'})
+
+        obj = {
+            'CategoryName': category.name,
+            'Name': item.name,
+            'Description': item.description
+        }
+        return jsonify(obj)
 
 class CatalogJSONView(MethodView):
 
@@ -547,6 +568,10 @@ handler.add_url_rule(
 handler.add_url_rule(
     '/catalog/edititem/<string:category_name>/<string:item_name>',
     view_func=EditView.as_view('edit_view'))
+
+handler.add_url_rule(
+    '/catalog/json/<string:category_name>/<string:item_name>',
+    view_func=ItemJSONView.as_view('item_json_view'))
 
 handler.add_url_rule(
     '/catalog/<string:category_name>/<string:item_name>/delete',
