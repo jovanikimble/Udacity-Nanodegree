@@ -284,6 +284,15 @@ class FBConnectView(MethodView):
     # print "url sent for API access:%s"% url
     # print "API JSON result: %s" % result
     data = json.loads(result)
+    print(data)
+
+    if 'error' in data:
+        error = data['error'].get('message', 'There was an error connecting to Facebook.')
+        resp = {
+          'error': error
+        }
+        return json.dumps(resp)
+
     login_session['provider'] = 'facebook'
     login_session['name'] = data["name"]
     login_session['email'] = data["email"]
@@ -315,7 +324,10 @@ class FBConnectView(MethodView):
     output += '<img src="'
     output += login_session['picture']
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    return output
+    resp = {
+        'result' : output
+    }
+    return json.dumps(resp)
 
 class SetupView(MethodView):
 

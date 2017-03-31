@@ -39,3 +39,8 @@ SQLAlchemy
       1. Find entry
       2. session.delete(entry)
       3. session.commut()
+
+    AUTHENTICATION AND AUTHORIZATION:
+      Authentication is asking "Do I know who this user is, and are they who they say they are?"
+
+      Authorization is asking "Is this user allowed to do XYZ?"

@@ -38,19 +38,20 @@
       data: access_token,
       contentType: 'application/octet-stream; charset=utf-8',
       success: function(result) {
+        var resp = JSON.parse(result);
         // Handle or verify the server response if necessary.
-        if (result) {
+        if('error' in resp) {
+          alert(resp['error']);
+        }
+        else {
           $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
          setTimeout(function() {
           window.location.href = "/";
          }, 4000);
+       }
+     }
 
-      } else {
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-         }
-      }
-
-  });
+      });
     });
   }
 </script>
