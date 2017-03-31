@@ -80,6 +80,7 @@ class MainView(MethodView):
         context['recent_results'] = results
         return render_template('main.html', context=context)
 
+
 class ItemJSONView(MethodView):
 
     def get(self, category_name, item_name):
@@ -101,6 +102,7 @@ class ItemJSONView(MethodView):
             'Description': item.description
         }
         return jsonify(obj)
+
 
 class CategoryJSONView(MethodView):
 
@@ -124,6 +126,7 @@ class CategoryJSONView(MethodView):
             d['Items'].append(obj)
 
         return jsonify(d)
+
 
 class CatalogJSONView(MethodView):
 
