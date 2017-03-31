@@ -30,6 +30,15 @@ handler = Blueprint('main_handler', __name__)
 
 
 def getUserID(email):
+    """
+    Gets the user id associated with this email.
+
+    Args:
+      email (str): Email of the user to find.
+
+    Returns:
+      Id of the user or None if not found
+    """
     user = session.query(User).filter_by(email=email).first()
     if not user:
         return None
@@ -37,6 +46,15 @@ def getUserID(email):
 
 
 def createUser(login_session):
+    """
+    Create a user given a login session.
+
+    Args:
+      login_session (dict): Login session corresponding to user.
+
+    Returns:
+      User id of created user.
+    """
     newUser = User(
         name=login_session['name'],
         email=login_session['email'],
@@ -357,6 +375,7 @@ class LoginView(MethodView):
 
 
 def fbdisconnect():
+    """Logout from Facebook user."""
     facebook_id = login_session['facebook_id']
     # The access token must me included to successfully logout
     access_token = login_session['access_token']
