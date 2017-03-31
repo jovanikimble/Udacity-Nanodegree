@@ -38,8 +38,6 @@ class Item(Base):
     description = Column(Text, nullable=False)
     added = Column(DateTime, default=datetime.datetime.utcnow, nullable=False)
 
-
-####insert at end of file ####
 engine = create_engine(
     'postgresql+psycopg2://vagrant:123@localhost/catalog')
 
