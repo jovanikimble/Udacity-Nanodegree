@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>BlogLife</title>
+    <title>Item Catalog</title>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu:300i,400,400i,500,500i" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="/static/main.css">
     <link rel="stylesheet" href="/static/bootstrap.css">
@@ -15,6 +15,7 @@
   </head>
   <body>
     <div class="container">
+
       <div class="row-fluid">
         <div class="col-md-12">
           <div class="login-area">
@@ -25,6 +26,16 @@
               <a class="login-link" href="/login">login</a>
             {% endif %}
           </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="modify-area">
+          <div class="col-md-2">
+            <a href='/catalog/additem' class="text-center">Add Item</a>
+            &nbsp; | &nbsp;
+            <a href='/catalog/addcategory' class="text-center">Add Category</a>
+            </div>
         </div>
       </div>
 

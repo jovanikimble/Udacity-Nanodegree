@@ -123,7 +123,7 @@ class ItemView(MethodView):
 class AddView(MethodView):
 
     def get(self):
-        if 'name' not in login_session:
+        if 'email' not in login_session:
             return redirect('/login')
 
         context ={}
@@ -135,7 +135,7 @@ class AddView(MethodView):
         return render_template('add_item.html', context=context)
 
     def post(self):
-        if 'name' not in login_session:
+        if 'email' not in login_session:
             return redirect('/login')
 
         user = session.query(User).filter_by(email=login_session['email']).first()
@@ -152,6 +152,39 @@ class AddView(MethodView):
         session.commit()
 
         return redirect('/catalog/{0}/items'.format(category.name))
+
+class AddCategoryView(MethodView):
+
+    def get(self):
+        if 'email' not in login_session:
+            return redirect('/login')
+
+        context ={}
+        context['login_session'] = login_session
+
+        categories = session.query(Category).all()
+        context['categories'] = categories
+
+        return render_template('add_category.html', context=context)
+
+    def post(self):
+        if 'email' not in login_session:
+            return redirect('/login')
+
+        category_name = request.form.get('name', '')
+        category = session.query(Category).filter_by(
+            name=category_name).first()
+
+        if category is not None:
+            return render_template('error.html',
+                msg="That category already exists, create something new")
+
+
+        new_category = Category(name=category_name)
+        session.add(new_category)
+        session.commit()
+
+        return redirect('/catalog/{0}/items'.format(category_name))
 
 class EditView(MethodView):
 
@@ -444,6 +477,10 @@ handler.add_url_rule(
 handler.add_url_rule(
     '/catalog/additem',
     view_func=AddView.as_view('add_view'))
+
+handler.add_url_rule(
+    '/catalog/addcategory',
+    view_func=AddCategoryView.as_view('add_category_view'))
 
 handler.add_url_rule(
     '/catalog/edititem/<string:category_name>/<string:item_name>',
