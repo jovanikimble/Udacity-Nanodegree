@@ -156,7 +156,7 @@ class AddView(MethodView):
 class EditView(MethodView):
 
     def get(self, category_name, item_name):
-        if 'name' not in login_session:
+        if 'email' not in login_session:
             return redirect('/login')
 
         context = {}
@@ -165,14 +165,31 @@ class EditView(MethodView):
         categories = session.query(Category).all()
         context['categories'] = categories
 
-        category = session.query(Category).filter_by(name=category_name).first()
-        item = session.query(Item).filter_by(name=item_name,category_id=category.id).first()
+        category = session.query(Category).filter_by(
+            name=category_name).first()
+        item = session.query(Item).filter_by(
+            name=item_name,category_id=category.id).first()
+
+        if item is None:
+            return render_template('error.html',
+                msg="Sorry, That item does not exist.")
+
+        user = session.query(User).filter_by(id=item.user_id).first()
+
+        if user is None:
+            return render_template('error.html',
+                msg='Cannot determine the owner of the item')
+
+        if login_session['email'] != user.email:
+            return render_template('error.html',
+                msg='You are not allowed to edit this item :(')
+
 
         return render_template('edit_item.html', name=item_name,
             category=category_name, description=item.description, context=context)
 
     def post(self, category_name, item_name):
-        if 'name' not in login_session:
+        if 'email' not in login_session:
             return redirect('/login')
 
         category = request.form.get('category', '')
@@ -180,8 +197,24 @@ class EditView(MethodView):
         description = request.form.get('description', '')
 
         new_category = session.query(Category).filter_by(name=category).first()
-        category_object = session.query(Category).filter_by(name=category_name).first()
-        item = session.query(Item).filter_by(name=item_name,category_id=category_object.id).first()
+        category_object = session.query(Category).filter_by(
+            name=category_name).first()
+        item = session.query(Item).filter_by(name=item_name,
+            category_id=category_object.id).first()
+
+        if item is None:
+            return render_template('error.html',
+                msg="Sorry, That item does not exist.")
+
+        user = session.query(User).filter_by(id=item.user_id).first()
+
+        if user is None:
+            return render_template('error.html',
+                msg='Cannot determine the owner of the item')
+
+        if login_session['email'] != user.email:
+            return render_template('error.html',
+                msg='You are not allowed to edit this item :(')
 
         item.name = name
         item.description = description
@@ -193,7 +226,7 @@ class EditView(MethodView):
 class DeleteView(MethodView):
 
     def get(self,category_name, item_name):
-        if 'name' not in login_session:
+        if 'email' not in login_session:
             return redirect('/login')
 
         context = {}
@@ -201,6 +234,25 @@ class DeleteView(MethodView):
 
         context['item'] = item_name
         context['category'] = category_name
+
+        category = session.query(Category).filter_by(
+            name=category_name).first()
+        item = session.query(Item).filter_by(
+            name=item_name,category_id=category.id).first()
+
+        if item is None:
+            return render_template('error.html',
+                msg="Sorry, That item does not exist.")
+
+        user = session.query(User).filter_by(id=item.user_id).first()
+
+        if user is None:
+            return render_template('error.html',
+                msg='Cannot determine the owner of the item')
+
+        if login_session['email'] != user.email:
+            return render_template('error.html',
+                msg='You are not allowed to delete this item :(')
 
         return render_template('delete_item.html', context=context)
 
@@ -211,6 +263,20 @@ class DeleteView(MethodView):
         category = session.query(Category).filter_by(name=category_name).first()
         item = session.query(Item).filter_by(name=item_name,
             category_id=category.id).first()
+
+        if item is None:
+            return render_template('error.html',
+                msg="Sorry, That item does not exist.")
+
+        user = session.query(User).filter_by(id=item.user_id).first()
+
+        if user is None:
+            return render_template('error.html',
+                msg='Cannot determine the owner of the item')
+
+        if login_session['email'] != user.email:
+            return render_template('error.html',
+                msg='You are not allowed to delete this item :(')
 
         session.delete(item)
         session.commit()
@@ -275,7 +341,10 @@ class FBConnectView(MethodView):
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.4/me"
     # strip expire tag from access token
-    token = result.split("&")[0]
+    data = json.loads(result)
+    token = 'access_token=' + data['access_token']
+
+    #token = result.split("&")[0]
 
 
     url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token

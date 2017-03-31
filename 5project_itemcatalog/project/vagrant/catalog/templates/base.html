@@ -18,7 +18,7 @@
       <div class="row-fluid">
         <div class="col-md-12">
           <div class="login-area">
-            {% if context.login_session and context.login_session.name %}
+            {% if context and context.login_session and context.login_session.name %}
               <img height="20px" width="20px" src="{{context.login_session.picture}}"></img>
               {{context.login_session.name}} (<a class="login-link" href="/logout">logout</a>)
             {% else %}
