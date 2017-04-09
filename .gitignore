@@ -1,3 +1,5 @@
 **/*/fb_client_secrets.json
 .vagrant
 *.pyc
+**/*/grader_instructions
+**/*/udacity_rsa
