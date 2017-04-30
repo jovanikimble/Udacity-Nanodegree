@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row-fluid">
+
+    <div class="col-md-2 text-center">
+      <h3>Categories</h3>
+      {% for c in context.categories %}
+       <div><a href="/catalog/{{c.name}}/items">{{c.name}}</a></div>
+      {% endfor %}
+    </div>
+
+    <div class="col-md-8 text-center">
+      <h3>Latest Items</h3>
+      {% for category, item in context.recent_results %}
+        <div><a href="/catalog/{{category.name}}/{{item.name}}">{{item.name}} ({{category.name}})</a></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

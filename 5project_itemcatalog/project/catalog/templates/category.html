@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row-fluid">
+
+    <div class="col-md-2 text-center">
+      <h3>Categories</h3>
+      {% for c in context.categories %}
+       <div><a href="/catalog/{{c.name}}/items">{{c.name}}</a></div>
+      {% endfor %}
+    </div>
+
+    <div class="col-md-8 text-center">
+      <h3 class="text-center">{{context.category_name}} Items</h3>
+      {% for item in context.items_list %}
+        <div><a href="/catalog/{{context.category_name}}/{{item.name}}">{{item.name}}</a></div>
+      {% endfor %}
+    </div>
+
+    <br/>
+    <div class="text-center">
+      <a href="/catalog/json/{{context.category_name}}">View category as JSON</a>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

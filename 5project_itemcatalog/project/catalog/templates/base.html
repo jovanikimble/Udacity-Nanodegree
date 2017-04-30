@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Item Catalog</title>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu:300i,400,400i,500,500i" rel="stylesheet">
+    <link type="text/css" rel="stylesheet" href="/static/main.css">
+    <link rel="stylesheet" href="/static/bootstrap.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    {% block headpart %}
+
+    {% endblock %}
+  </head>
+  <body>
+    <div class="container">
+
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <div class="login-area">
+            {% if context and context.login_session and context.login_session.name %}
+              <img height="20px" width="20px" src="{{context.login_session.picture}}"></img>
+              {{context.login_session.name}} (<a class="login-link" href="/logout">logout</a>)
+            {% else %}
+              <a class="login-link" href="/login">login</a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="modify-area">
+          <div class="col-md-2">
+            <a href='/catalog/additem' class="text-center">Add Item</a>
+            &nbsp; | &nbsp;
+            <a href='/catalog/addcategory' class="text-center">Add Category</a>
+            </div>
+        </div>
+      </div>
+
+      <div class="row-fluid">
+        <div class="col-md-12">
+          <h2 class="text-center">
+              <a href="/">Item Catalog</a>
+          </h2>
+          <h4 class="text-center">Keep track of your items</h4>
+        </div>
+      </div>
+
+    </div>
+    <div id="content">
+    {% block content %}
+    {% endblock %}
+    </div>
+  </body>
+</html>
+
+
+

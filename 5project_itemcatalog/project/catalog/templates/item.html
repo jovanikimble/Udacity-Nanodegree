@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  <div class="row-fluid">
+
+    <div class="col-md-12 text-center">
+      <h3>{{context.item.name}}</h3>
+      <div>{{context.item.description}}</div>
+
+      <br/>
+
+      <div><a href="/catalog/edititem/{{context.category_name}}/{{context.item.name}}">Edit Item</a></div>
+      <div><a href="/catalog/{{context.category_name}}/{{context.item.name}}/delete">Delete Item</a></div>
+      <div><a href="/catalog/json/{{context.category_name}}/{{context.item.name}}">View Item as JSON</a></div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
