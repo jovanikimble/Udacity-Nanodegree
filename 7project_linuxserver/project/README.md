@@ -1,3 +1,17 @@
+# Grader setup
+
+Here is how you SSH into the machine:
+
+ssh grader@34.203.220.55 -p 2200 -i ~/.ssh/udacity_rsa
+
+Passphrase: blueberrykoolaid
+
+(The RSA key is provided in the project folder)
+
+You can view the website by going to:
+
+http://34.203.220.55
+
 # Linux Server
 
 This project shows how you can host an online catalog on a linux server.
